@@ -255,7 +255,7 @@ gapminder %>%
 3. Attempt to overlay line plots for all countries. That is, repeat the above code, but don't filter. What's wrong here?
 
 ```{r}
-  ggplot(gapminder, aes(x=year, y=lifeExp)) +
+ggplot(gapminder, aes(x=year, y=lifeExp)) +
   geom_line()
 ```
 
