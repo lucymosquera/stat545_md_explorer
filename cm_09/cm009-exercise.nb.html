@@ -178,6 +178,9 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKGxpYnJhcnkodGlkeXZlcnNlKSlcbmBgYCJ9 -->
+<pre class="r"><code>suppressPackageStartupMessages(library(tidyverse))</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="reading-and-writing-data-exercises" class="section level2">
@@ -234,11 +237,17 @@ $(document).ready(function () {
 <p>Write the <code>iris</code> data frame as a <code>csv</code>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfY3N2KGlyaXMsIFwiaXJpcy5jc3ZcIilcbmBgYCJ9 -->
+<pre class="r"><code>write_csv(iris, &quot;iris.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Write the <code>iris</code> data frame to a file delimited by a dollar sign.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfZGVsaW0oaXJpcywgXCJpcmlzLnR4dFwiLCBkZWxpbT1cIiRcIilcbmBgYCJ9 -->
+<pre class="r"><code>write_delim(iris, &quot;iris.txt&quot;, delim=&quot;$&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Read the dollar-delimited <code>iris</code> data to a tibble.</p>
@@ -332,6 +341,9 @@ cols(
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG90cl91bnRpZHkgPC0gYmluZF9yb3dzKGxvdHIxLCBsb3RyMiwgbG90cjMpXG5gYGAifQ== -->
+<pre class="r"><code>lotr_untidy &lt;- bind_rows(lotr1, lotr2, lotr3)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <ol start="2" style="list-style-type: decimal">
@@ -339,8 +351,8 @@ cols(
 </ol>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2F0aGVyKGxvdHJfdW50aWR5LCBrZXk9XCJHZW5kZXJcIiwgdmFsdWU9XCJXb3JkXCIsIGNvbnRhaW5zKFwiYWxlXCIpKVxuXG5gYGAifQ== -->
-<pre class="r"><code>gather(lotr_untidy, key=&quot;Gender&quot;, value=&quot;Word&quot;, contains(&quot;ale&quot;))
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2F0aGVyKGxvdHJfdW50aWR5LCBrZXk9XCJHZW5kZXJcIiwgdmFsdWU9XCJXb3JkXCIsIEZlbWFsZSwgTWFsZSlcblxuYGBgIn0= -->
+<pre class="r"><code>gather(lotr_untidy, key=&quot;Gender&quot;, value=&quot;Word&quot;, Female, Male)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiIyBBIHRpYmJsZTogMTggeCA0XG4gICBGaWxtICAgICAgICAgICAgICAgICAgICAgICBSYWNlICAgR2VuZGVyICBXb3JkXG4gICA8Y2hyPiAgICAgICAgICAgICAgICAgICAgICA8Y2hyPiAgPGNocj4gIDxpbnQ+XG4gMSBUaGUgRmVsbG93c2hpcCBPZiBUaGUgUmluZyBFbGYgICAgRmVtYWxlICAxMjI5XG4gMiBUaGUgRmVsbG93c2hpcCBPZiBUaGUgUmluZyBIb2JiaXQgRmVtYWxlICAgIDE0XG4gMyBUaGUgRmVsbG93c2hpcCBPZiBUaGUgUmluZyBNYW4gICAgRmVtYWxlICAgICAwXG4gNCBUaGUgVHdvIFRvd2VycyAgICAgICAgICAgICBFbGYgICAgRmVtYWxlICAgMzMxXG4gNSBUaGUgVHdvIFRvd2VycyAgICAgICAgICAgICBIb2JiaXQgRmVtYWxlICAgICAwXG4gNiBUaGUgVHdvIFRvd2VycyAgICAgICAgICAgICBNYW4gICAgRmVtYWxlICAgNDAxXG4gNyBUaGUgUmV0dXJuIE9mIFRoZSBLaW5nICAgICBFbGYgICAgRmVtYWxlICAgMTgzXG4gOCBUaGUgUmV0dXJuIE9mIFRoZSBLaW5nICAgICBIb2JiaXQgRmVtYWxlICAgICAyXG4gOSBUaGUgUmV0dXJuIE9mIFRoZSBLaW5nICAgICBNYW4gICAgRmVtYWxlICAgMjY4XG4xMCBUaGUgRmVsbG93c2hpcCBPZiBUaGUgUmluZyBFbGYgICAgTWFsZSAgICAgOTcxXG4xMSBUaGUgRmVsbG93c2hpcCBPZiBUaGUgUmluZyBIb2JiaXQgTWFsZSAgICAzNjQ0XG4xMiBUaGUgRmVsbG93c2hpcCBPZiBUaGUgUmluZyBNYW4gICAgTWFsZSAgICAxOTk1XG4xMyBUaGUgVHdvIFRvd2VycyAgICAgICAgICAgICBFbGYgICAgTWFsZSAgICAgNTEzXG4xNCBUaGUgVHdvIFRvd2VycyAgICAgICAgICAgICBIb2JiaXQgTWFsZSAgICAyNDYzXG4xNSBUaGUgVHdvIFRvd2VycyAgICAgICAgICAgICBNYW4gICAgTWFsZSAgICAzNTg5XG4xNiBUaGUgUmV0dXJuIE9mIFRoZSBLaW5nICAgICBFbGYgICAgTWFsZSAgICAgNTEwXG4xNyBUaGUgUmV0dXJuIE9mIFRoZSBLaW5nICAgICBIb2JiaXQgTWFsZSAgICAyNjczXG4xOCBUaGUgUmV0dXJuIE9mIFRoZSBLaW5nICAgICBNYW4gICAgTWFsZSAgICAyNDU5XG4ifQ== -->
