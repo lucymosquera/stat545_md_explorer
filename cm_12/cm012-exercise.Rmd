@@ -47,8 +47,10 @@ str(lotr2)
 Examples of problems encountered with factors. (ideas came from [R Bloggers](https://www.r-bloggers.com/factors-are-not-first-class-citizens-in-r/))
 
 ```{r}
+head(iris)
 iris %>% 
-  mutate(Species = ifelse(Species == "versicolor", "vers", Species))
+  mutate(Species = ifelse(Species == "versicolor", "vers", Species)) %>% 
+  str()
 ```
 
 ```{r}
@@ -72,7 +74,12 @@ set.seed(10)
 Convert `draw` to a factor. What are the levels? How many are there? How many of each category was drawn?
 
 ```{r}
-
+draw <- factor(draw)
+draw
+levels(draw)
+nlevels(draw)
+fct_count(draw)
+table(draw)
 ```
 
 
@@ -82,6 +89,8 @@ We saw that `c()` doesn't work for concatenating. Modify the following code to u
 
 ```{r}
 c(lotr1$Film, lotr2$Film)
+fct_c(lotr1$Film, lotr2$Film)
+
 ```
 
 Try binding by row `lotr1` and `lotr2`:
@@ -92,9 +101,12 @@ Try binding by row `lotr1` and `lotr2`:
 Which one is more lenient? Which would you prefer?
 
 ```{r}
+rbind(lotr1, lotr2) %>% 
+  str()
 
+bind_rows(lotr1, lotr2) %>% 
+  str()
 ```
-
 
 ## Unused Levels
 
@@ -120,7 +132,14 @@ gap_small <- gapminder %>%
 Exercise: Make a bar chart of the number of times a continent has a country with population < 250,000 in the `gapminder` data set. Try with and without `scale_x_discrete(drop=FALSE)`.
 
 ```{r}
+gap_small %>% 
+  ggplot(aes(continent)) +
+  geom_bar()
 
+gap_small %>% 
+  ggplot(aes(continent)) +
+  scale_x_discrete(drop=FALSE) + 
+  geom_bar()
 ```
 
 __Example of when it's bad__: If you ever use the `levels()` function.
@@ -137,7 +156,13 @@ Exercise: get rid of the unused factor levels for country and continent in diffe
 - Re-defining the variable as a factor
 
 ```{r}
+gap_small %>% 
+  droplevels() %>% 
+  str()
 
+gap_small %>% 
+  mutate(continent = fct_drop(continent)) %>% 
+  str()
 ```
 
 
@@ -152,7 +177,7 @@ levels(cont)
 
 Plotting happens in the order of the factor levels:
 
-```{r, fig.width=2, fig.height=1}
+```{r}
 qplot(cont)
 ```
 
@@ -165,13 +190,23 @@ Reorder by frequency:
 - Rearrange by frequency: `fct_infreq()`.
 - Reverse: `fct_rev()` 
 
-```{r, fig.width=2, fig.height=1}
+```{r}
 cont %>% 
   fct_infreq() %>% 
+  qplot()
+
+cont %>% 
+  fct_infreq() %>% 
+  fct_rev() %>% 
   qplot()
 ```
 
 Could also arrange by the order they appear in the factor with `fct_inorder()`.
+
+```{r}
+draw %>% fct_inorder()
+```
+
 
 ### Ordering by Another Variable
 
@@ -185,13 +220,16 @@ ggplot(gap_asia_2007, aes(lifeExp, country)) + geom_point()
 
 Let's use `fct_reorder()` to reorder the countries of `gap_asia_2007` by life Expectancy, and produce the same plot:
 
-```{r, fig.width=2, fig.height=1}
+```{r}
+gap_asia_2007 %>% 
+  mutate(country = fct_reorder(country, lifeExp)) %>% 
+  ggplot(aes(lifeExp, country)) + geom_point()
 
 ```
 
 What about when life Expectancy is not unique? Example: life expectancy of each continent:
 
-```{r, fig.width=2, fig.height=1}
+```{r}
 ggplot(gapminder, aes(continent, lifeExp)) +
   geom_violin()
 ggplot(gapminder, aes(continent, lifeExp)) +
@@ -202,8 +240,16 @@ ggplot(gapminder, aes(continent, lifeExp)) +
 
 Exercise: Try making the above box plot and violin plots, ordered by median lifeExp. Try other functions to order by by modifying the `.fun` argument.
 
-```{r, fig.width=2, fig.height=1}
+```{r}
+gapminder %>% 
+  mutate(continent = fct_reorder(continent, lifeExp)) %>% 
+  ggplot(aes(continent, lifeExp)) +
+  geom_violin()
 
+gapminder %>% 
+  mutate(continent = fct_reorder(continent, lifeExp)) %>% 
+  ggplot(aes(continent, lifeExp)) +
+  geom_boxplot()
 ```
 
 
@@ -225,8 +271,11 @@ Use `fct_reorder2(f, x, y)` to reorder factor `f`:
 
 Exercise: Reorder the above line graph so that the legend is in order of last life expectancy. Useful for black-and-white printing!
 
-```{r, fig.width=2, fig.height=1}
-
+```{r}
+gap_select %>% 
+  mutate(country = fct_reorder2(country, year, lifeExp)) %>% 
+  ggplot(aes(year, lifeExp)) +
+  geom_line(aes(group=country, colour=country))
 ```
 
 ### Ordering "because I said so"
@@ -240,7 +289,7 @@ Here's how to use `fct_relevel()` to do that. Exercise: modify the code so that:
 
 ```{r}
 gap_asia_2007$country %>% 
-  fct_relevel("Syria") %>% 
+  fct_relevel("Syria", "Sweden") %>% 
   levels() %>% 
   head()
 ```
@@ -256,7 +305,7 @@ gap_big_north <- gapminder %>%
   filter(country %in% c("Canada", "United States", "Mexico")) %>% 
   droplevels()
 gap_big_north$country %>% 
-  fct_recode("USA" = "United States") %>% 
+  fct_recode("USA" = "United States", "Can" = "Canada") %>% 
   levels()
 ```
 
@@ -271,7 +320,7 @@ gap_2007 <- gapminder %>%
 
 We can arbitrarily combine levels using `fct_collapse()`. For example, combine Europe and Asia into one factor called "combo":
 
-```{r, fig.width=2, fig.height=1}
+```{r}
 cont %>% 
   fct_collapse("combo" = c("Europe", "Asia")) %>% 
   qplot()
@@ -284,8 +333,14 @@ More practically, we can lump the least frequent levels together as "Other". Mod
 - You let `fct_lump()` decide on the number of non-other continents. How is this chosen?
 - Note: you can manually specify non-other levels using `fct_other()`.
 
-```{r, fig.width=2, fig.height=1}
+```{r}
+cont %>% 
+  fct_lump() %>% 
+  qplot()
 
+cont %>% 
+  fct_lump(n=2) %>% #Keep the top 2 most frequent levels, combine the rest
+  qplot()
 ```
 
 We can use the `w` argument to lump by another variable.
@@ -295,11 +350,11 @@ Exercise: Modify the following violin plot of life expectancies of African count
 1. There are 4 "violins" corresponding to countries with the highest lifeExp.
 2. There are 4 "violins" corresponding to countries with the highest gdpPercap
 
-```{r, fig.width=2, fig.height=1}
+```{r}
 gap_africa <- gapminder %>% 
     filter(continent == "Africa")
 gap_africa %>% 
-    mutate(country = fct_lump(country)) %>% 
+    mutate(country = fct_lump(country, w=lifeExp, n=4)) %>% 
     ggplot(aes(country, lifeExp)) +
     geom_violin()
 ```
@@ -343,7 +398,8 @@ Goal here: some exposure to `lubridate`; know it exists.
 1. Use different combinations of y, m, d to make a date time object.
 
 ```{r}
-
+lubridate::ymd(170512)
+lubridate::ymd("2017-May-11")
 ```
 
 2. Get `year`, `month`, `yday`, `wday`, `day`.
