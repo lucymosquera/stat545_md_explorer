@@ -18,9 +18,9 @@ library(gapminder)
     - Practice by saving the following plot to file: 
 
 ```{r}
-ggplot(mtcars, aes(hp, wt)) + 
+p <- ggplot(mtcars, aes(hp, wt)) + 
     geom_point()
-ggsave(FILENAME_HERE, PLOT_OBJECT_HERE)
+ggsave("my_plot.png", p)
 ```
 
 - Base R way: print plots "to screen", sandwiched between `pdf()`/`jpeg()`/`png()`... and `dev.off()`. 
@@ -40,7 +40,7 @@ p_scales <- ggplot(gapminder, aes(gdpPercap, lifeExp)) +
      geom_point(aes(colour=pop), alpha=0.2)
 p_scales + 
     scale_x_log10() +
-    scale_colour_continuous(trans="log10")
+    scale_colour_continuous(trans="log10") #Colour is a logarithmic scale
 ```
 
 1. Change the y-axis tick mark spacing to 10; change the colour spacing to include all powers of 10.
@@ -50,9 +50,8 @@ p_scales +
     scale_x_log10() +
     scale_colour_continuous(
         trans  = "log10", 
-        breaks = FILL_IN_BREAKS
-    ) +
-    FILL_IN_SCALE_FUNCTION(breaks=FILL_IN_BREAKS)
+        breaks = 10^(1:10)) +
+    scale_y_continuous(breaks=10*(1:10))
 ```
 
 2. Specify `scales::*_format` in the `labels` argument of a scale function to do the following:
@@ -62,12 +61,11 @@ p_scales +
 ```{r}
 library(scales)
 p_scales +
-    scale_x_log10(labels=FILL_THIS_IN) +
+    scale_x_log10(labels=dollar_format()) +
     scale_colour_continuous(
         trans  = "log10", 
         breaks = 10^(1:10),
-        labels = FILL_THIS_IN
-    ) +
+        labels = comma_format()) +
     scale_y_continuous(breaks=10*(1:10))
 ```
 
@@ -79,12 +77,11 @@ p_scales +
 RColorBrewer::display.brewer.all()
 p_scales +
     scale_x_log10(labels=dollar_format()) +
-    FILL_IN_WITH_RCOLORBREWER(
+    scale_colour_distiller(
         trans   = "log10",
         breaks  = 10^(1:10),
         labels  = comma_format(),
-        palette = FILL_THIS_IN
-    ) +
+        palette = "Greens") +
     scale_y_continuous(breaks=10*(1:10))
 ```
 
@@ -95,12 +92,10 @@ p_scales +
 ```{r}
 p_scales +
     scale_x_log10(labels=dollar_format()) +
-    FILL_IN_WITH_RCOLORBREWER(
+    scale_colour_viridis_c(
         trans   = "log10",
         breaks  = 10^(1:10),
-        labels  = comma_format(),
-        palette = FILL_THIS_IN
-    ) +
+        labels  = comma_format()) +
     scale_y_continuous(breaks=10*(1:10))
 ```
 
@@ -118,7 +113,8 @@ ggplot(iris, aes(Sepal.Width, Sepal.Length)) +
      geom_point() +
      labs(x = "Sepal Width",
           y = "Sepal Length",
-          title = "Sepal sizes of three plant species")
+          title = "Sepal sizes of three plant species") +
+  theme_bw()
 ```
 
 2. Then, change font size of axis labels, and the strip background colour. Others?
@@ -131,8 +127,9 @@ ggplot(iris, aes(Sepal.Width, Sepal.Length)) +
           y = "Sepal Length",
           title = "Sepal sizes of three plant species") +
     theme_bw() +
-    theme(FILL_IN_ARG_FOR_AXIS_TITLE = FILL_THIS_IN,
-          strip.background = FILL_THIS_IN)
+    theme(axis.text = element_text(size = 12),
+          strip.background = element_rect(fill = "orange"),
+          panel.background = element_rect(fill = "lightblue"))
 ```
 
 
@@ -160,7 +157,8 @@ Consider the following plot:
 1. Convert it to a `plotly` object by applying the `ggplotly()` function:
 
 ```{r}
-FILL_THIS_IN
+library(plotly)
+ggplotly(p)
 ```
 
 2. You can save a plotly graph locally as an html file. Try saving the above:
@@ -169,7 +167,7 @@ FILL_THIS_IN
 ```{r}
 p %>% 
     ggplotly() %>% 
-    htmlwidgets::saveWidget("LOCATION_GOES_HERE")
+    htmlwidgets::saveWidget("BeautifulPlot.html")
 ```
 
 
@@ -201,7 +199,7 @@ plot_ly(gapminder,
 plot_ly(gapminder, 
         x = ~gdpPercap, 
         y = ~lifeExp, 
-        z = FILL_THIS_IN,
+        z = ~pop,
         type = "scatter3d",
         mode = "markers",
         opacity = 0.2)
